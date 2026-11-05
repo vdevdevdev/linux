@@ -20,6 +20,7 @@ of interest to most developers working on device drivers.
    :maxdepth: 1
 
    basics
+   writing-a-driver
    driver-model/index
    device_link
    infrastructure
