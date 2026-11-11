@@ -4,6 +4,40 @@ Linux kernel
 The Linux kernel is the core of any Linux operating system. It manages hardware,
 system resources, and provides the fundamental services for all other software.
 
+Core Components
+---------------
+
+The diagram shows a simplified view of the kernel's major subsystems::
+
+    +------------------------------------------------------------------+
+    |                    User-space applications                       |
+    +------------------------------------------------------------------+
+                                   |
+                            System calls
+                                   |
+    +------------------------------v-----------------------------------+
+    |                         Linux kernel                             |
+    |                                                                  |
+    |  +------------------+  +------------------+  +-----------------+ |
+    |  | Process          |  | Memory           |  | Virtual         | |
+    |  | scheduling       |  | management       |  | filesystem (VFS)| |
+    |  +------------------+  +------------------+  +-----------------+ |
+    |  +------------------+  +------------------+  +-----------------+ |
+    |  | Networking       |  | Inter-process    |  | Security        | |
+    |  | stack            |  | communication    |  | frameworks      | |
+    |  +------------------+  +------------------+  +-----------------+ |
+    |                                                                  |
+    |  Device drivers and architecture-specific code                   |
+    +------------------------------------------------------------------+
+                                   |
+    +------------------------------v-----------------------------------+
+    |              Hardware: CPUs, memory, disks, devices              |
+    +------------------------------------------------------------------+
+
+These subsystems cooperate within the kernel; the boxes do not represent
+isolated layers. Drivers and architecture-specific code connect kernel
+services to the underlying hardware.
+
 Quick Start
 -----------
 
