@@ -4,6 +4,42 @@ Linux kernel
 The Linux kernel is the core of any Linux operating system. It manages hardware,
 system resources, and provides the fundamental services for all other software.
 
+Core Components
+---------------
+
+This simplified diagram shows the main kernel subsystems and their relationship
+to user space and hardware. Subsystems cooperate and share services; the boxes
+do not represent isolated layers::
+
+    +------------------------------------------------------------------+
+    |                    User-space applications                       |
+    +------------------------------------------------------------------+
+                                  |
+                           System call interface
+                                  |
+    +------------------------------------------------------------------+
+    |                         Linux kernel                             |
+    |                                                                  |
+    |  +------------------+  +------------------+  +----------------+  |
+    |  | Process          |  | Memory           |  | Virtual        |  |
+    |  | scheduling       |  | management       |  | filesystem     |  |
+    |  +------------------+  +------------------+  +----------------+  |
+    |                                                                  |
+    |  +------------------+  +------------------+  +----------------+  |
+    |  | Networking       |  | IPC and          |  | Device         |  |
+    |  | stack            |  | synchronization  |  | drivers        |  |
+    |  +------------------+  +------------------+  +----------------+  |
+    |                                                                  |
+    |        Architecture-specific code and interrupt handling         |
+    +------------------------------------------------------------------+
+                                  |
+    +------------------------------------------------------------------+
+    |             Hardware: CPUs, memory, storage, devices             |
+    +------------------------------------------------------------------+
+
+IPC (interprocess communication) lets processes exchange data and coordinate
+their work. Security checks and access control apply across these subsystems.
+
 Quick Start
 -----------
 
