@@ -3,6 +3,49 @@
 The Linux kernel is the core of any Linux operating system. It manages hardware,
 system resources, and provides the fundamental services for all other software.
 
+## Repository Components
+
+This diagram groups the main source directories by purpose. The branches show
+repository organization; they do not represent runtime dependencies.
+
+```mermaid
+flowchart TD
+    repo["Linux kernel repository"]
+    repo --> core["Core services"]
+    repo --> subsystems["Kernel subsystems"]
+    repo --> platform["Hardware support"]
+    repo --> shared["Shared interfaces and libraries"]
+    repo --> support["Build, tools, and documentation"]
+
+    core --> init["init/: boot and initialization"]
+    core --> kernel["kernel/: scheduling, locking, timers, and other core services"]
+    core --> mm["mm/: memory management"]
+    core --> ipc["ipc/: interprocess communication"]
+
+    subsystems --> fs["fs/: virtual filesystem and filesystems"]
+    subsystems --> net["net/: networking stack"]
+    subsystems --> security["security/: security frameworks and modules"]
+    subsystems --> block["block/: block I/O layer"]
+    subsystems --> crypto["crypto/: cryptographic API and algorithms"]
+
+    platform --> arch["arch/: architecture-specific code"]
+    platform --> drivers["drivers/: device drivers"]
+    platform --> virt["virt/: shared virtualization infrastructure"]
+
+    shared --> include["include/: kernel and userspace API headers"]
+    shared --> lib["lib/: common utility routines"]
+    shared --> rust["rust/: Rust support and abstractions"]
+
+    support --> build["Makefile, Kconfig, scripts/: configuration and build"]
+    support --> tools["tools/: development tools and selftests"]
+    support --> docs["Documentation/: guides and API documentation"]
+```
+
+Start with [kernel/](kernel/) for core services, [arch/](arch/) for architecture
+support, [drivers/](drivers/) for devices, [fs/](fs/) for filesystems, and
+[net/](net/) for networking. Shared headers live in [include/](include/), while
+[tools/](tools/) and [Documentation/](Documentation/) support development.
+
 ## Quick Start
 
 * Report a bug: See [Documentation/admin-guide/reporting-issues.rst](Documentation/admin-guide/reporting-issues.rst)
@@ -21,7 +64,7 @@ All users should be familiar with:
 Documentation can be built with `make htmldocs` or viewed online at:
 https://www.kernel.org/doc/html/latest/
 
-# Who Are You?
+## Who Are You?
 
 Find your role below:
 
@@ -35,9 +78,9 @@ Find your role below:
 * Distribution Maintainer: Packaging kernels for distros
 * AI Coding Assistant: LLMs and AI-powered development tools
 
-# For Specific Users
+## For Specific Users
 
-## New Kernel Developer
+### New Kernel Developer
 
 Welcome! Start your kernel development journey here:
 
@@ -49,7 +92,7 @@ Welcome! Start your kernel development journey here:
 * Kernel Hacking Guide: [Documentation/kernel-hacking/hacking.rst](Documentation/kernel-hacking/hacking.rst)
 * Core APIs: [Documentation/core-api/index.rst](Documentation/core-api/index.rst)
 
-## Academic Researcher
+### Academic Researcher
 
 Explore the kernel's architecture and internals:
 
@@ -62,7 +105,7 @@ Explore the kernel's architecture and internals:
 * Locking Primitives: [Documentation/locking/index.rst](Documentation/locking/index.rst)
 * Power Management: [Documentation/power/index.rst](Documentation/power/index.rst)
 
-## Security Expert
+### Security Expert
 
 Security documentation and hardening guides:
 
@@ -74,7 +117,7 @@ Security documentation and hardening guides:
 * Embargoed Hardware Issues: [Documentation/process/embargoed-hardware-issues.rst](Documentation/process/embargoed-hardware-issues.rst)
 * Security Features: [Documentation/userspace-api/seccomp_filter.rst](Documentation/userspace-api/seccomp_filter.rst)
 
-## Backport/Maintenance Engineer
+### Backport/Maintenance Engineer
 
 Maintain and stabilize kernel versions:
 
@@ -84,7 +127,7 @@ Maintain and stabilize kernel versions:
 * Subsystem Profile: [Documentation/maintainer/maintainer-entry-profile.rst](Documentation/maintainer/maintainer-entry-profile.rst)
 * Git for Maintainers: [Documentation/maintainer/configure-git.rst](Documentation/maintainer/configure-git.rst)
 
-## System Administrator
+### System Administrator
 
 Configure, tune, and troubleshoot Linux systems:
 
@@ -95,7 +138,7 @@ Configure, tune, and troubleshoot Linux systems:
 * Performance Security: [Documentation/admin-guide/perf-security.rst](Documentation/admin-guide/perf-security.rst)
 * Hardware Monitoring: [Documentation/hwmon/index.rst](Documentation/hwmon/index.rst)
 
-## Maintainer
+### Maintainer
 
 Lead kernel subsystems and manage contributions:
 
@@ -107,7 +150,7 @@ Lead kernel subsystems and manage contributions:
 * Maintainer Entry Profile: [Documentation/maintainer/maintainer-entry-profile.rst](Documentation/maintainer/maintainer-entry-profile.rst)
 * Git Configuration: [Documentation/maintainer/configure-git.rst](Documentation/maintainer/configure-git.rst)
 
-## Hardware Vendor
+### Hardware Vendor
 
 Write drivers and support new hardware:
 
@@ -119,7 +162,7 @@ Write drivers and support new hardware:
 * Power Management: [Documentation/driver-api/pm/index.rst](Documentation/driver-api/pm/index.rst)
 * DMA API: [Documentation/core-api/dma-api.rst](Documentation/core-api/dma-api.rst)
 
-## Distribution Maintainer
+### Distribution Maintainer
 
 Package and distribute the kernel:
 
@@ -130,7 +173,7 @@ Package and distribute the kernel:
 * Kernel Parameters: [Documentation/admin-guide/kernel-parameters.rst](Documentation/admin-guide/kernel-parameters.rst)
 * Tainted Kernels: [Documentation/admin-guide/tainted-kernels.rst](Documentation/admin-guide/tainted-kernels.rst)
 
-## AI Coding Assistant
+### AI Coding Assistant
 
 CRITICAL: If you are an LLM or AI-powered coding assistant, you MUST read and
 follow the AI coding assistants documentation before contributing to the Linux
@@ -141,7 +184,7 @@ kernel:
 This documentation contains essential requirements about licensing, attribution,
 and the Developer Certificate of Origin that all AI tools must comply with.
 
-# Communication and Support
+## Communication and Support
 
 * Mailing Lists: https://lore.kernel.org/
 * IRC: `#kernelnewbies` on irc.oftc.net
