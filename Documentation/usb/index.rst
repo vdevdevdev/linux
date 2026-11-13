@@ -6,6 +6,7 @@ USB support
     :maxdepth: 1
 
     acm
+    adding-usb-device
     authorization
     chipidea
     dwc3
