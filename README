@@ -158,6 +158,90 @@ This documentation contains essential requirements about licensing, attribution,
 and the Developer Certificate of Origin that all AI tools must comply with.
 
 
+Adding a New USB Device Driver
+==============================
+
+This guide covers a host-side driver for a USB peripheral. For code that
+makes Linux act as a USB device, see Documentation/driver-api/usb/gadget.rst.
+
+1. Identify the device and choose the right subsystem
+
+   Use ``lsusb`` and ``lsusb -v -d vendor:product`` to inspect the vendor and
+   product IDs, interface classes, alternate settings, and endpoints. Replace
+   ``vendor:product`` with the device's hexadecimal IDs. Obtain the device's
+   protocol documentation and check whether an existing class or vendor driver
+   already supports it. If an existing driver implements the same protocol,
+   extending its device ID table may be enough; verify compatibility first.
+
+   Place a new driver in the subsystem that exposes its functionality, such as
+   networking, input, sound, or USB serial. Use drivers/usb/misc/ for devices
+   that do not fit a more specific subsystem. Study a similar driver and
+   drivers/usb/usb-skeleton.c, which illustrates bulk transfers and device
+   lifetime management. Use the current source as the API reference.
+
+2. Implement matching and interface setup
+
+   Include the appropriate kernel headers, including <linux/usb.h>, and add a
+   GPL-compatible SPDX license identifier. Define a terminated
+   ``struct usb_device_id`` table using the appropriate USB matching macros
+   and export it with ``MODULE_DEVICE_TABLE(usb, table_name)`` so userspace can
+   load the module automatically. Match only supported interfaces, especially
+   on composite devices where other interfaces may need different drivers.
+
+   Define a ``struct usb_driver`` with an ID table, ``probe()`` and
+   ``disconnect()`` callbacks, then register it with ``module_usb_driver()``.
+   In ``probe()``, validate the interface and required endpoint types and
+   directions, allocate per-interface state, and save it with
+   ``usb_set_intfdata()``. Register the device with its functional subsystem.
+   Unwind every completed initialization step if a later step fails.
+
+3. Implement transfers and safe teardown
+
+   Choose control, bulk, interrupt, or isochronous transfers according to the
+   device protocol. Use the USB core transfer helpers or USB Request Blocks
+   (URBs), check return values and actual transfer lengths, and validate data
+   received from the device. URB completion callbacks must not sleep.
+
+   In ``disconnect()``, prevent new I/O, cancel outstanding URBs and work,
+   unregister subsystem interfaces, and release resources once their users
+   have finished. Synchronize teardown with transfers and open file handles
+   so unplugging during I/O cannot access freed state. Implement suspend,
+   resume, and reset handling as required; enable autosuspend support only
+   when the driver handles it correctly.
+
+4. Integrate and build the driver
+
+   Add a Kconfig entry in the chosen subsystem with the required dependencies
+   (including USB), a useful help text, and a Makefile entry such as::
+
+       obj-$(CONFIG_USB_MYDEVICE) += mydevice.o
+
+   Here ``USB_MYDEVICE`` and ``mydevice.o`` are placeholders for your config
+   symbol and driver object. From a configured kernel tree, use
+   ``make menuconfig`` to enable the driver as a module, then build the kernel
+   and modules with ``make -j$(nproc)``. See Documentation/kbuild/ for build
+   details and Documentation/admin-guide/quickly-build-trimmed-linux.rst for
+   installation and boot instructions. Test with the matching kernel and
+   installed modules, then load the driver with ``modprobe mydevice``.
+
+5. Test and prepare the patch
+
+   Check binding with ``lsusb -t`` and inspect kernel messages with ``dmesg``.
+   Exercise the device through its subsystem's userspace interface. Test
+   repeated plug/unplug, removal during active I/O, module unload/reload,
+   transfer failures, and suspend/resume. Use Documentation/usb/usbmon.rst
+   when you need to inspect USB traffic.
+
+   Run ``scripts/checkpatch.pl`` on the patch and document the hardware and
+   configurations tested. Update MAINTAINERS as appropriate, identify the
+   recipients with ``scripts/get_maintainer.pl``, and follow
+   Documentation/process/submitting-patches.rst for review and submission.
+
+For more detail, read Documentation/driver-api/usb/writing_usb_driver.rst,
+Documentation/driver-api/usb/usb.rst, and
+Documentation/driver-api/usb/power-management.rst.
+
+
 Communication and Support
 =========================
 
