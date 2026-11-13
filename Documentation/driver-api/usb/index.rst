@@ -17,6 +17,7 @@ Linux USB API
    persist
    error-codes
    writing_usb_driver
+   adding-device-support
    dwc3
    writing_musb_glue_layer
    typec
