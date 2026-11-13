@@ -25,6 +25,66 @@ Documentation can be built with make htmldocs or viewed online at:
 https://www.kernel.org/doc/html/latest/
 
 
+Source Tree Overview
+====================
+
+The top level directories of the source tree, arranged by the layer of the
+system they belong to::
+
+                         +---------------------------+
+                         |    User space programs    |
+                         +-------------+-------------+
+                                       | system calls
+  +------------------------------------v-------------------------------------+
+  |                                Linux kernel                              |
+  |                                                                          |
+  |  init/      Boot time initialization, start_kernel()                     |
+  |  kernel/    Core: scheduler, signals, timers, locking, BPF, tracing      |
+  |  ipc/       System V IPC and POSIX message queues                        |
+  |                                                                          |
+  |  +-------------+ +-------------+ +-------------+ +------------------+    |
+  |  | mm/         | | fs/         | | net/        | | security/        |    |
+  |  | Memory      | | VFS and     | | Networking  | | LSMs: SELinux,   |    |
+  |  | management  | | filesystems | | stack and   | | AppArmor, ...    |    |
+  |  |             | |             | | protocols   | | keys/  certs/    |    |
+  |  +-------------+ +------+------+ +-------------+ +------------------+    |
+  |                         |                                                |
+  |  +-------------+ +------v------+ +-------------+ +------------------+    |
+  |  | io_uring/   | | block/      | | crypto/     | | virt/            |    |
+  |  | Async I/O   | | Block layer | | Crypto API  | | KVM common code  |    |
+  |  | interface   | | and I/O     | | and         | |                  |    |
+  |  |             | | schedulers  | | algorithms  | |                  |    |
+  |  +-------------+ +-------------+ +-------------+ +------------------+    |
+  |                                                                          |
+  |  +--------------------------------------+ +----------------------------+ |
+  |  | drivers/   Device drivers (PCI, USB, | | sound/   ALSA sound        | |
+  |  |            GPU, storage, net, ...)   | |          subsystem         | |
+  |  +--------------------------------------+ +----------------------------+ |
+  |                                                                          |
+  |  +--------------------------------------------------------------------+  |
+  |  | arch/   Architecture specific code (x86, arm64, riscv, ...)        |  |
+  |  +--------------------------------------------------------------------+  |
+  +------------------------------------+-------------------------------------+
+                                       |
+                         +-------------v-------------+
+                         |         Hardware          |
+                         +---------------------------+
+
+  Shared by all of the above:
+    include/    Header files (include/uapi/ is the user space ABI)
+    lib/        Generic library routines (strings, lists, compression, ...)
+    rust/       Rust support and abstractions for kernel code
+
+  Building, testing and documenting:
+    Makefile, Kconfig, Kbuild   Top level build and configuration
+    scripts/    Build helpers, checkpatch.pl, get_maintainer.pl, ...
+    usr/        Initramfs generation and UAPI header checks
+    tools/      User space tools and selftests (perf, bpftool, testing/)
+    samples/    Example code for kernel APIs
+    Documentation/  Kernel documentation sources
+    LICENSES/, COPYING, CREDITS, MAINTAINERS
+
+
 Who Are You?
 ============
 
