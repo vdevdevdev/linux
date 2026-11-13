@@ -24,6 +24,54 @@ All users should be familiar with:
 Documentation can be built with make htmldocs or viewed online at:
 https://www.kernel.org/doc/html/latest/
 
+Source Tree Overview
+--------------------
+
+The top-level directories of the source tree and how they relate::
+
+                     +-------------------------------------------+
+                     |              User space                   |
+                     |  tools/   samples/   usr/ (initramfs)     |
+                     +---------------------+---------------------+
+                                           | system calls
+  +----------------------------------------v-------------------------------+
+  |                          Core kernel                                   |
+  |                                                                        |
+  |  init/      boot-time startup        kernel/    scheduler, signals,    |
+  |  ipc/       SysV IPC, mqueues                   timers, tracing, bpf   |
+  |  mm/        memory management        io_uring/  async I/O interface    |
+  |                                                                        |
+  |  fs/        VFS and filesystems      net/       networking stack       |
+  |  block/     block layer              sound/     ALSA sound subsystem   |
+  |                                                                        |
+  |  security/  LSMs (SELinux, ...)      crypto/    crypto API             |
+  |  certs/     signing keys/keyrings    virt/      KVM common code        |
+  +-----------------------------------+------------------------------------+
+                                      |
+  +-----------------------------------v------------------------------------+
+  |  drivers/   device drivers (gpu, usb, pci, nvme, net, ...)             |
+  +-----------------------------------+------------------------------------+
+                                      |
+  +-----------------------------------v------------------------------------+
+  |  arch/      architecture-specific code (x86, arm64, riscv, ...)        |
+  +-----------------------------------+------------------------------------+
+                                      |
+                              +-------v-------+
+                              |   Hardware    |
+                              +---------------+
+
+  Shared by all of the above:
+    include/    public kernel and UAPI headers
+    lib/        generic helper library (strings, lists, compression, ...)
+    rust/       Rust support and kernel crate
+
+  Build, configuration and project metadata:
+    Makefile, Kbuild, Kconfig   top-level build and configuration
+    scripts/                    build helpers, checkpatch.pl, get_maintainer.pl
+    Documentation/              kernel documentation (this file's references)
+    MAINTAINERS, CREDITS        who maintains / contributed what
+    COPYING, LICENSES/          licensing
+
 
 Who Are You?
 ============
